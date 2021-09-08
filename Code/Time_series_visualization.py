@@ -16,7 +16,6 @@ import yfinance as yf
 Definição das funções usadas para plotar nossas séries temporais
 '''
 
-
 def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidir se vamos plottar a série já diferenciada ou não
 
 	'''
@@ -112,5 +111,5 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_flight_database(False, True)
+plot_stock_prices(False, True)
 
