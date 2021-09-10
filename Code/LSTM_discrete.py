@@ -29,7 +29,9 @@ X_train, y_train = split_sequence(series_train, len_lags)
 X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], 1))
 
 
-
+'''
+Construção da rede a ser usada e treinada no nosso conjunto de dados
+'''
 
 
 
