@@ -29,7 +29,7 @@ data = dataframe['Close'].to_list()
 
 print(data)
 
-len_lags = 2 # tamanho da nossa janela
+len_lags = 3 # tamanho da nossa janela
 
 X_train, y_train = split_sequence(data, len_lags)
 

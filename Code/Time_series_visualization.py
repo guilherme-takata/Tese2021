@@ -10,6 +10,11 @@ from IPython.display import display
 import datetime as dt
 from traitlets.traitlets import Int
 import yfinance as yf
+import seaborn as sns
+
+
+sns.set()
+
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 '''
@@ -111,5 +116,5 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_stock_prices(False, True)
+plot_flight_database(False, False)
 
