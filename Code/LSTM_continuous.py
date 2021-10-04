@@ -17,7 +17,7 @@ Aqui carregamos nossos dados na memória e chamamos a função definida anterior
 '''
 dataframe_path = fr"C:\Users\GuilhermeTakata\Documents\TCC\TCC\Datasets\Uniqlo(FastRetailing) 2012-2016 Training - stocks2012-2016.csv"
 
-dataframe = web.DataReader('GC=F', 'yahoo', start = '2001-01-01', end = '2020-12-31') # Carregamos nossos dados de treino na memória usando o pandas
+dataframe = web.DataReader('AAPL', 'yahoo', start = '20017-01-01', end = '2021-09-30') # Carregamos nossos dados de treino na memória usando o pandas
 
 display(dataframe)
 

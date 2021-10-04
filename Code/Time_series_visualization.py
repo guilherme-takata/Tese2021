@@ -1,4 +1,3 @@
-from re import split
 from Auxiliary_functions import Collatz, split_sequence
 import pandas as pd
 from matplotlib import pyplot as plt
@@ -11,10 +10,6 @@ import datetime as dt
 from traitlets.traitlets import Int
 import yfinance as yf
 import seaborn as sns
-
-
-sns.set()
-
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 '''
@@ -30,7 +25,7 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 
 	auc : Parâmetro que determina se será plotado a autocorrelação da série
 	'''
-	dataframe = web.DataReader('GC=F', 'yahoo', start = '2001-01-01', end = '2021-08-27')
+	dataframe = web.DataReader('AAPL', 'yahoo', start = '2017-01-01', end = '2021-09-30')
 
 	series = dataframe['Close']
 
@@ -47,6 +42,8 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 		plt.show()
 
 		return()
+
+	sns.set()
 
 	series.plot()
 
@@ -113,8 +110,7 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 		plot_pacf(series)
 
 
-
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_stock_prices(True, False)
+plot_stock_prices(False, False)
 
