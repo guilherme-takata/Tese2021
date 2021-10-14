@@ -9,7 +9,8 @@ from IPython.display import display
 import datetime as dt
 from traitlets.traitlets import Int
 import yfinance as yf
-import seaborn as sns
+import plotly.graph_objects as go
+
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 '''
@@ -25,7 +26,7 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 
 	auc : Parâmetro que determina se será plotado a autocorrelação da série
 	'''
-	dataframe = web.DataReader('AAPL', 'yahoo', start = '2017-01-01', end = '2021-09-30')
+	dataframe = web.DataReader('AAPL', 'yahoo', start = '2010-01-01', end = '2021-09-30')
 
 	series = dataframe['Close']
 
@@ -35,6 +36,7 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 
 	if auc:
 
+		
 		series = series[1:]
 
 		plot_pacf(series)
@@ -43,11 +45,11 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 
 		return()
 
-	sns.set()
+	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = series, text = 'Close'))
 
-	series.plot()
+	fig.update_layout({"title": 'Preço das ações da Apple ao fechar a bolsa', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Preço de fechamento'}})
 
-	plt.show()
+	fig.show()
 
 	return()
 
@@ -79,12 +81,10 @@ def plot_flight_database(diff : bool, auc : bool):
 
 		return()
 
-
-	series.plot()
-
-	plt.show()
-
-	return()
+	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['Num_cancelados']))
+	fig.update_layout({"title": 'Número de voos cancelados por dia', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de voos cancelados'}})
+	fig.show()
+	
 
 
 
@@ -112,5 +112,5 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_stock_prices(False, False)
+plot_flight_database(False, False)
 

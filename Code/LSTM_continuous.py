@@ -17,13 +17,9 @@ Aqui carregamos nossos dados na memória e chamamos a função definida anterior
 '''
 dataframe_path = fr"C:\Users\GuilhermeTakata\Documents\TCC\TCC\Datasets\Uniqlo(FastRetailing) 2012-2016 Training - stocks2012-2016.csv"
 
-dataframe = web.DataReader('AAPL', 'yahoo', start = '20017-01-01', end = '2021-09-30') # Carregamos nossos dados de treino na memória usando o pandas
+dataframe = web.DataReader('AAPL', 'yahoo', start = '2010-01-01', end = '2020-12-31') # Carregamos nossos dados de treino na memória usando o pandas
 
 display(dataframe)
-
-# scaler = MinMaxScaler(feature_range = (0,1))
-
-# data = scaler.fit_transform(dataframe[['Close']])
 
 data = dataframe['Close'].to_list()
 
@@ -59,7 +55,7 @@ Model.fit(X_train, y_train, epochs = 50, batch_size = 30, verbose = 1) # Chamada
 Carregamento dos dados de validação do modelo
 '''
 
-dataframe2 = web.DataReader('GC=F', 'yahoo', start = '2021-01-01', end = '2021-08-29') # Carregamento na memória da nossa base de teste 
+dataframe2 = web.DataReader('AAPL', 'yahoo', start = '2021-01-01', end = '2021-09-30') # Carregamento na memória da nossa base de teste 
 
 # data_test = dataframe2['Close'].diff()
 
@@ -79,7 +75,6 @@ Plotagem para comparação dos dados de teste e as predições feitas
 '''
 
 index = [x for x in range(len(Y_test))]
-
 
 plt.plot(index , Y_test[:], label = "original")
 
