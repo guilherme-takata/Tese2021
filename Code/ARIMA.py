@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 def arima_model(series): # Funcão para achar os melhores parâmetros para o modelo de ARIMA
 
 
-    autoarima = pmd.auto_arima(series, trace = True, start_p = 1, start_q = 1,max_p = 4, max_q = 4, test = 'adf', d = 0, seasonal = True, start_P = 1, start_Q = 1, start_D = 0, m = 12, stepwise = False)
+    autoarima = pmd.auto_arima(series, trace = True, start_p = 1, start_q = 1,max_p = 5, max_q = 5, test = 'adf', d = 0, seasonal = True, start_P = 1, start_Q = 1, start_D = 0, m = 12, stepwise = False, max_P = 5, max_Q = 5)
     
     autoarima.fit(series)
 
@@ -25,12 +25,12 @@ def load_dataframe(name: str):
 
     if name == 'Flight':
 
-        dataframe = pd.read_csv(r"D:\TCC\Tese\Datasets\Flight_dataset_merged.csv", low_memory = False, sep = ';')
-        dataframe['FL_DATE'] = pd.to_datetime(dataframe['FL_DATE'], format = '%Y-%m-%d')
-        dataframe.set_index('FL_DATE', inplace = True)
-        dataframe = dataframe.groupby(pd.Grouper(freq = 'M')).agg(Num_cancelados = ('CANCELLED', 'sum'))
-        dataframe['Num_cancelados'] = pd.to_numeric(dataframe['Num_cancelados'], downcast = 'integer')
-        dataseries = dataframe['Num_cancelados']
+        dataframe = pd.read_csv(r"D:\TCC\Tese\Datasets\Flight_dataset_merged.csv", low_memory = False, sep = ';').groupby('FL_DATE').agg(Num_cancelados = ('CANCELLED','count'))
+        # dataframe['FL_DATE'] = pd.to_datetime(dataframe['FL_DATE'], format = '%Y-%m-%d')
+        # dataframe.set_index('FL_DATE', inplace = True)
+        # dataframe = dataframe.groupby(pd.Grouper(freq = 'M')).agg(Num_cancelados = ('CANCELLED', 'sum'))
+        # dataframe['Num_cancelados'] = pd.to_numeric(dataframe['Num_cancelados'], downcast = 'integer')
+        # dataseries = dataframe['Num_cancelados']
 
     elif name == 'Apple':
 
@@ -38,13 +38,15 @@ def load_dataframe(name: str):
 
         dataseries = dataframe['Close']
         
-    return(dataseries)
+    return(dataframe)
 
 dataset_name = 'Flight' # Determina qual conjunto de dados iremos usar
 
 data_series = load_dataframe(dataset_name)
 
-train_data = data_series[:math.floor(len(data_series)*0.8)] # Divisão dos dados em partes para treinamento
+display(data_series)
+
+train_data = data_series[:math.floor(len(data_series)*0.8)+1] # Divisão dos dados em partes para treinamento
 
 test_data = data_series[math.floor(len(data_series)*0.8):] # Parte dos dados para testar o modelo
 

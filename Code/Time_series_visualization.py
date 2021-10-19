@@ -50,9 +50,8 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 
 	fig.update_layout({"title": 'Preço das ações da Apple ao fechar a bolsa', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Preço de fechamento'}})
 
-	fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\AAPL_dataset_{suffix}.jpeg")
+	fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\AAPL_dataset_{suffix}.png" , width = 1600, format = 'png', height = 900 )
 
-	fig.show()
 
 	return()
 
@@ -98,11 +97,10 @@ def plot_flight_database(diff : bool, auc : bool):
 
 	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['Num_cancelados']))
 
-	fig.update_layout({"title": 'Número de voos cancelados por dia', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de voos cancelados'}})
+	fig.update_layout({"title": 'Número de voos cancelados por mês', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de voos cancelados'}})
 
-	fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Flight_dataset_{suffix}.jpeg")
+	fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Flight_dataset_{suffix}.png", width = 1600, format = 'png', height = 900 )
 
-	fig.show()
 	
 
 
@@ -132,4 +130,4 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
 plot_flight_database(False, False)
-
+plot_stock_prices(False, False)
