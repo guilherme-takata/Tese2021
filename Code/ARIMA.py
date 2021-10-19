@@ -14,7 +14,7 @@ import plotly.graph_objects as go
 def arima_model(series): # Funcão para achar os melhores parâmetros para o modelo de ARIMA
 
 
-    autoarima = pmd.auto_arima(series, trace = True, start_p = 1, start_q = 1,max_p = 4, max_q = 4, test = 'adf', d = 1, seasonal = True, start_P = 1, start_Q = 1, start_D = 1, m = 12, stepwise = False)
+    autoarima = pmd.auto_arima(series, trace = True, start_p = 1, start_q = 1,max_p = 4, max_q = 4, test = 'adf', d = 0, seasonal = True, start_P = 1, start_Q = 1, start_D = 0, m = 12, stepwise = False)
     
     autoarima.fit(series)
 
@@ -25,17 +25,20 @@ def load_dataframe(name: str):
 
     if name == 'Flight':
 
-        dataframe = pd.read_csv(r"D:\TCC\Tese\Datasets\Flight_dataset_merged.csv", sep = ';', low_memory = False).groupby('FL_DATE', as_index = True).agg(Num_cancelados = ('CANCELLED', 'sum'))
-
-        dataseries = dataframe['Num_cancelados'].values
+        dataframe = pd.read_csv(r"D:\TCC\Tese\Datasets\Flight_dataset_merged.csv", low_memory = False, sep = ';')
+        dataframe['FL_DATE'] = pd.to_datetime(dataframe['FL_DATE'], format = '%Y-%m-%d')
+        dataframe.set_index('FL_DATE', inplace = True)
+        dataframe = dataframe.groupby(pd.Grouper(freq = 'M')).agg(Num_cancelados = ('CANCELLED', 'sum'))
+        dataframe['Num_cancelados'] = pd.to_numeric(dataframe['Num_cancelados'], downcast = 'integer')
+        dataseries = dataframe['Num_cancelados']
 
     elif name == 'Apple':
 
         dataframe = web.DataReader('AAPL', 'yahoo', start = '2017-01-01', end = '2021-09-30')
 
-        dataseries = dataframe['Close'].values
+        dataseries = dataframe['Close']
         
-    return(dataseries)   
+    return(dataseries)
 
 dataset_name = 'Flight' # Determina qual conjunto de dados iremos usar
 

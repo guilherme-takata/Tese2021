@@ -5,9 +5,16 @@ from tensorflow.keras.layers import *
 import matplotlib.pyplot as plt
 from Auxiliary_functions import *
 import math
+from IPython.display import display
+import tensorflow as tf 
+from tensorflow.keras.layers import *
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
+from Auxiliary_functions import *
+from tensorflow.keras import Sequential
 
 
-len_lags = 14
+len_lags = 5
 
 '''
 Seção para carregamento da base de dados e adequação dos nossos dados de treinamento
@@ -33,6 +40,15 @@ X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], 1))
 Construção da rede a ser usada e treinada no nosso conjunto de dados
 '''
 
+Model = Sequential() # Inicialização da nossa rede
+Model.add(LSTM(64, activation = 'relu', input_shape = (len_lags, 1), return_sequences = True))
+Model.add(LSTM(64, activation = 'relu'))
+# Model.add(LSTM(64))
+# Model.add(LSTM(32))
+Model.add(Dense(1, use_bias = False))
+Model.compile(loss = 'mean_squared_error', optimizer = 'adam') # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
+
+Model.fit(X_train, y_train, epochs = 50, batch_size = 30, verbose = 1) # Chamada do treinamento e otimização da rede
 
 
 

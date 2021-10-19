@@ -10,6 +10,7 @@ from tensorflow.keras.layers import *
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from Auxiliary_functions import *
+from tensorflow.keras import Sequential
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 '''
@@ -38,14 +39,15 @@ Parte responsável pela construção, experimentação e treinamento das redes
 '''
 
 Model = Sequential() # Inicialização da nossa rede
-Model.add(LSTM(64, activation = 'tanh', input_shape = (len_lags, 1), return_sequences = True))
-Model.add(LSTM(64, activation = 'relu', input_shape = (len_lags, 1)))
+Model.add(LSTM(128, input_shape = (len_lags, 1), return_sequences = True))
+Model.add(LSTM(64, input_shape = (len_lags, 1)))
 # Model.add(LSTM(64))
 # Model.add(LSTM(32))
-Model.add(Dense(15, use_bias = False))
+Model.add(Dense(20, use_bias = False))
+Model.add(Dense(1))
 Model.compile(loss = 'mean_squared_error', optimizer = 'adam') # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
 
-Model.fit(X_train, y_train, epochs = 50, batch_size = 30, verbose = 1) # Chamada do treinamento e otimização da rede
+Model.fit(X_train, y_train, epochs = 20, batch_size = 30, verbose = 1) # Chamada do treinamento e otimização da rede
 
 
 
