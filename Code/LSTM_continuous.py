@@ -76,11 +76,11 @@ predictions = Model.predict(X_test)
 Plotagem para comparação dos dados de teste e as predições feitas
 '''
 
-index = [x for x in range(len(Y_test))]
+# index = [x for x in range(len(Y_test))]
 
-plt.plot(index , Y_test[:], label = "original")
+plt.plot(dataframe2.index , Y_test[:], label = "original")
 
-plt.plot(index, predictions[:,0][:], label = "predição do modelo")
+plt.plot(dataframe2.index, predictions[:,0][:], label = "predição do modelo")
 
 plt.legend(loc = 'best')
 plt.show()

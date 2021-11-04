@@ -129,5 +129,5 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_flight_database(False, False)
+plot_flight_database(False, True)
 plot_stock_prices(False, False)
