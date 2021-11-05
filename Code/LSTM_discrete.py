@@ -14,7 +14,7 @@ from Auxiliary_functions import *
 from tensorflow.keras import Sequential
 
 
-len_lags = 5
+len_lags = 6
 
 '''
 Seção para carregamento da base de dados e adequação dos nossos dados de treinamento
@@ -46,19 +46,20 @@ Construção da rede a ser usada e treinada no nosso conjunto de dados
 '''
 
 Model = Sequential() # Inicialização da nossa rede
-Model.add(LSTM(1056, input_shape = (len_lags, 1), return_sequences = True))
-Model.add(LSTM(528, return_sequences = True))
-Model.add(LSTM(256, return_sequences = True))
-Model.add(LSTM(128))
-Model.add(Dense(120, activation = 'linear'))
-Model.add(Dense(64, activation = 'linear'))
-Model.add(Dense(32, activation = 'linear'))
-Model.add(Dense(10, activation = 'linear'))
+Model.add(LSTM(60, input_shape = (len_lags, 1), return_sequences = True))
+Model.add(LSTM(32))
+Model.add(Dense(32, activation = 'relu'))
+# Model.add(LSTM(16, return_sequences = True))
+# Model.add(LSTM(256, return_sequences = True))
+# Model.add(LSTM(128))
+# Model.add(Dense(120, activation = 'relu'))
+# Model.add(Dense(64, activation = 'linear'))
+# Model.add(Dense(32, activation = 'relu'))
+Model.add(Dense(10, activation = 'relu'))
 Model.add(Dense(1, activation = 'linear'))
 
-Model.compile(loss = 'mean_squared_error', optimizer = 'nadam') # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
+Model.compile(loss = 'mean_squared_error', optimizer = 'adam') # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
 
-Model.fit(X_train, y_train, epochs = 20, batch_size = 500, verbose = 1) # Chamada do treinamento e otimização da rede
+Model.fit(X_train, y_train, epochs = 60, batch_size = 150, verbose = 1) # Chamada do treinamento e otimização da rede
 
-
-
+Model.predict()

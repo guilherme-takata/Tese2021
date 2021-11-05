@@ -66,40 +66,45 @@ def plot_flight_database(diff : bool, auc : bool):
 	auc : Parâmetro que determina se será plotado a autocorrelação da série
 	'''
 
-	dataframe = pd.read_csv(r"D:\TCC\Tese\Datasets\Flight_dataset_merged.csv", low_memory = False, sep = ';')
-	dataframe['FL_DATE'] = pd.to_datetime(dataframe['FL_DATE'], format = '%Y-%m-%d')
-	dataframe.set_index('FL_DATE', inplace = True)
-	'''.groupby('FL_DATE', as_index = False).agg(Num_cancelados = ('CANCELLED', 'sum'))'''
-	dataframe = dataframe.groupby(pd.Grouper(freq = 'M')).agg(Num_cancelados = ('CANCELLED', 'sum'))
-	dataframe['Num_cancelados'] = pd.to_numeric(dataframe['Num_cancelados'], downcast = 'integer')
-	print(dataframe.dtypes)
+	dataframe = pd.read_csv('https://query.data.world/s/vdygswcavkyurbc4ebenvmah5zmnfw')
 
-	series = dataframe['Num_cancelados']
+	print(dataframe.columns)
+	
+	display(dataframe['yearmonth'].unique())
 
-	display(series)
+	# dataframe['FL_DATE'] = pd.to_datetime(dataframe['FL_DATE'], format = '%Y-%m-%d')
+	# dataframe.set_index('FL_DATE', inplace = True)
+	# '''.groupby('FL_DATE', as_index = False).agg(Num_cancelados = ('CANCELLED', 'sum'))'''
+	# dataframe = dataframe.groupby(pd.Grouper(freq = 'M')).agg(Num_cancelados = ('CANCELLED', 'sum'))
+	# dataframe['Num_cancelados'] = pd.to_numeric(dataframe['Num_cancelados'], downcast = 'integer')
+	# print(dataframe.dtypes)
 
-	suffix = ''
+	# series = dataframe['Num_cancelados']
 
-	if diff:
+	# display(series)
 
-		series = series.diff()
-		series = series[1:]
+	# suffix = ''
+
+	# if diff:
+
+	# 	series = series.diff()
+	# 	series = series[1:]
 		
-	if auc:
+	# if auc:
 
-		plot_acf(series)
+	# 	plot_acf(series)
 
-		suffix = 'acf'
+	# 	suffix = 'acf'
 
-		plt.show()
+	# 	plt.show()
 
-		return()
+	# 	return()
 
-	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['Num_cancelados']))
+	# fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['Num_cancelados']))
 
-	fig.update_layout({"title": 'Número de voos cancelados por mês', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de voos cancelados'}})
+	# fig.update_layout({"title": 'Número de voos cancelados por mês', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de voos cancelados'}})
 
-	fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Flight_dataset_{suffix}.png", width = 1600, format = 'png', height = 900 )
+	# fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Flight_dataset_{suffix}.png", width = 1600, format = 'png', height = 900 )
 
 	
 
@@ -129,5 +134,4 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_flight_database(False, True)
-plot_stock_prices(False, False)
+plot_flight_database(False, False)
