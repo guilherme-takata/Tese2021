@@ -66,11 +66,12 @@ def plot_flight_database(diff : bool, auc : bool):
 	auc : Parâmetro que determina se será plotado a autocorrelação da série
 	'''
 
-	dataframe = pd.read_csv('https://query.data.world/s/vdygswcavkyurbc4ebenvmah5zmnfw')
+	dataframe = pd.read_csv('https://raw.githubusercontent.com/guilherme-takata/Tese2021_datasets/main/DOMensalEstadoDesde1991_agregado.csv?token=APKBVN4SGF3AC73KPE3IPKTBRHJEO', sep = ';', low_memory= False)
+
 
 	print(dataframe.columns)
 	
-	display(dataframe['yearmonth'].unique())
+	
 
 	# dataframe['FL_DATE'] = pd.to_datetime(dataframe['FL_DATE'], format = '%Y-%m-%d')
 	# dataframe.set_index('FL_DATE', inplace = True)
@@ -100,9 +101,9 @@ def plot_flight_database(diff : bool, auc : bool):
 
 	# 	return()
 
-	# fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['Num_cancelados']))
+	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['0']))
 
-	# fig.update_layout({"title": 'Número de voos cancelados por mês', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de voos cancelados'}})
+	fig.update_layout({"title": 'Número de crimes por mês e ano', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de crimes'}})
 
 	# fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Flight_dataset_{suffix}.png", width = 1600, format = 'png', height = 900 )
 
