@@ -50,9 +50,9 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 
 	fig.update_layout({"title": 'Preço das ações da Apple ao fechar a bolsa', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Preço de fechamento'}})
 
-	fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\AAPL_dataset_{suffix}.png" , width = 1600, format = 'png', height = 900 )
+	# fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\AAPL_dataset_{suffix}.png" , width = 1600, format = 'png', height = 900 )
 
-
+	fig.show()
 	return()
 
 
@@ -66,12 +66,12 @@ def plot_flight_database(diff : bool, auc : bool):
 	auc : Parâmetro que determina se será plotado a autocorrelação da série
 	'''
 
-	dataframe = pd.read_csv('https://raw.githubusercontent.com/guilherme-takata/Tese2021_datasets/main/DOMensalEstadoDesde1991_agregado.csv?token=APKBVN4JGRL4UHKWGO44CH3BRHK3A', sep = ';', low_memory= False)
+	dataframe = pd.read_csv('https://raw.githubusercontent.com/guilherme-takata/Tese2021_datasets/main/DOMensalEstadoDesde1991_agregado.csv', sep = ';', low_memory= False)
 
 
 	print(dataframe.columns)
 	
-	
+	print(dataframe.index)
 
 	# dataframe['FL_DATE'] = pd.to_datetime(dataframe['FL_DATE'], format = '%Y-%m-%d')
 	# dataframe.set_index('FL_DATE', inplace = True)
@@ -101,12 +101,13 @@ def plot_flight_database(diff : bool, auc : bool):
 
 	# 	return()
 
-	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['0']))
+	fig = go.Figure(data = go.Scatter(x = dataframe["Mês/ano"], y = dataframe['0']))
 
 	fig.update_layout({"title": 'Número de crimes por mês e ano', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de crimes'}})
 
 	# fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Flight_dataset_{suffix}.png", width = 1600, format = 'png', height = 900 )
 
+	fig.show()
 	
 	return()
 
@@ -135,4 +136,4 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_stock_prices(False, False)
+plot_flight_database(False, False)
