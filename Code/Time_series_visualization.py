@@ -66,7 +66,7 @@ def plot_flight_database(diff : bool, auc : bool):
 	auc : Parâmetro que determina se será plotado a autocorrelação da série
 	'''
 
-	dataframe = pd.read_csv('https://raw.githubusercontent.com/guilherme-takata/Tese2021_datasets/main/DOMensalEstadoDesde1991_agregado.csv?token=APKBVN4SGF3AC73KPE3IPKTBRHJEO', sep = ';', low_memory= False)
+	dataframe = pd.read_csv('https://raw.githubusercontent.com/guilherme-takata/Tese2021_datasets/main/DOMensalEstadoDesde1991_agregado.csv?token=APKBVN4JGRL4UHKWGO44CH3BRHK3A', sep = ';', low_memory= False)
 
 
 	print(dataframe.columns)
@@ -108,7 +108,7 @@ def plot_flight_database(diff : bool, auc : bool):
 	# fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Flight_dataset_{suffix}.png", width = 1600, format = 'png', height = 900 )
 
 	
-
+	return()
 
 
 def plot_Collatz(x0: Int, diff: Int, auc: Int):
@@ -135,4 +135,4 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_flight_database(False, False)
+plot_stock_prices(False, False)
