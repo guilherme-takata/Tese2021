@@ -20,7 +20,7 @@ def load_dataframe(name: str):
 
     if name == 'Rio crimes':
 
-        dataframe = pd.read_csv(r"https://raw.githubusercontent.com/guilherme-takata/Tese2021_datasets/main/DOMensalEstadoDesde1991_agregado.csv?token=APKBVN56YAP6IFETUOTT7J3BRGYFA", sep = ';', low_memory = False)
+        dataframe = pd.read_csv(r"https://raw.githubusercontent.com/guilherme-takata/Tese2021_datasets/main/DOMensalEstadoDesde1991_agregado.csv", sep = ';', low_memory = False)
 
     elif name == 'Apple':
 

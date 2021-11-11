@@ -67,41 +67,35 @@ def plot_flight_database(diff : bool, auc : bool):
 	'''
 
 	dataframe = pd.read_csv('https://raw.githubusercontent.com/guilherme-takata/Tese2021_datasets/main/DOMensalEstadoDesde1991_agregado.csv', sep = ';', low_memory= False)
-
-
-	print(dataframe.columns)
 	
+	dataframe["Mês/ano"] = pd.to_datetime(dataframe["Mês/ano"], format = "%m/%Y")
+
+	dataframe.set_index("Mês/ano", inplace = True)
+
 	print(dataframe.index)
 
-	# dataframe['FL_DATE'] = pd.to_datetime(dataframe['FL_DATE'], format = '%Y-%m-%d')
-	# dataframe.set_index('FL_DATE', inplace = True)
-	# '''.groupby('FL_DATE', as_index = False).agg(Num_cancelados = ('CANCELLED', 'sum'))'''
-	# dataframe = dataframe.groupby(pd.Grouper(freq = 'M')).agg(Num_cancelados = ('CANCELLED', 'sum'))
-	# dataframe['Num_cancelados'] = pd.to_numeric(dataframe['Num_cancelados'], downcast = 'integer')
-	# print(dataframe.dtypes)
-
-	# series = dataframe['Num_cancelados']
+	series = dataframe['0']
 
 	# display(series)
 
 	# suffix = ''
 
-	# if diff:
+	if diff:
 
-	# 	series = series.diff()
-	# 	series = series[1:]
+		series = series.diff()
+		series = series[1:]
 		
-	# if auc:
+	if auc:
 
-	# 	plot_acf(series)
+		plot_acf(series)
 
-	# 	suffix = 'acf'
+		suffix = 'acf'
 
-	# 	plt.show()
+		plt.show()
 
-	# 	return()
+		return()
 
-	fig = go.Figure(data = go.Scatter(x = dataframe["Mês/ano"], y = dataframe['0']))
+	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['0']))
 
 	fig.update_layout({"title": 'Número de crimes por mês e ano', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de crimes'}})
 
@@ -136,4 +130,4 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_flight_database(False, False)
+plot_flight_database(False, True)
