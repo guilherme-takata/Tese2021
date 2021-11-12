@@ -66,15 +66,15 @@ def plot_flight_database(diff : bool, auc : bool):
 	auc : Parâmetro que determina se será plotado a autocorrelação da série
 	'''
 
-	dataframe = pd.read_csv('https://raw.githubusercontent.com/guilherme-takata/Tese2021_datasets/main/DOMensalEstadoDesde1991_agregado.csv', sep = ';', low_memory= False)
+	dataframe = pd.read_csv(r'https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv', sep = ',', low_memory= False)
 	
-	dataframe["Mês/ano"] = pd.to_datetime(dataframe["Mês/ano"], format = "%m/%Y")
+	dataframe["Month"] = pd.to_datetime(dataframe["Month"], format = "%Y-%m")
 
-	dataframe.set_index("Mês/ano", inplace = True)
+	dataframe.set_index("Month", inplace = True)
 
 	print(dataframe.index)
 
-	series = dataframe['0']
+	series = dataframe['Passengers']
 
 	# display(series)
 
@@ -95,11 +95,11 @@ def plot_flight_database(diff : bool, auc : bool):
 
 		return()
 
-	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['0']))
+	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['Passengers']))
 
-	fig.update_layout({"title": 'Número de crimes por mês e ano', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de crimes'}})
+	fig.update_layout({"title": 'Número de crimes por mês e ano', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de passageiros'}})
 
-	# fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Flight_dataset_{suffix}.png", width = 1600, format = 'png', height = 900 )
+	fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Crimes_no_RJ.png", width = 1600, format = 'png', height = 900 )
 
 	fig.show()
 	
@@ -130,4 +130,4 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_flight_database(False, True)
+plot_flight_database(False, False)

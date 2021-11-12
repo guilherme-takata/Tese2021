@@ -59,11 +59,9 @@ Carregamento dos dados de validação do modelo
 
 dataframe2 = web.DataReader('AAPL', 'yahoo', start = '2021-01-01', end = '2021-09-30') # Carregamento na memória da nossa base de teste 
 
-# data_test = dataframe2['Close'].diff()
-
 data_test = dataframe2['Close'].values.tolist()
 
-X_test, Y_test = split_sequence(data, len_lags)
+X_test, Y_test = split_sequence(data_test, len_lags)
 
 X_test = X_test.reshape((X_test.shape[0], X_test.shape[1], 1))
 
@@ -78,7 +76,7 @@ Plotagem para comparação dos dados de teste e as predições feitas
 
 # index = [x for x in range(len(Y_test))]
 
-plt.plot(dataframe2.index , Y_test[:], label = "original")
+plt.plot(dataframe2.index , Y_test, label = "original")
 
 plt.plot(dataframe2.index, predictions[:,0][:], label = "predição do modelo")
 

@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 def arima_model(series): # Funcão para achar os melhores parâmetros para o modelo de ARIMA
 
 
-    autoarima = pmd.auto_arima(series, trace = True, start_p = 1, start_q = 1,max_p = 4, max_q = 4, test = 'adf', d = 1, seasonal = True, start_P = 1, start_Q = 1, start_D = 1, m = 12, stepwise = False)
+    autoarima = pmd.auto_arima(series, trace = True, start_p = 1, start_q = 1, max_p = 5, max_q = 5, d = 1, seasonal = True, start_P = 1, start_Q = 1, D = 1, m = 12, stepwise = False, maxiter= 200)
     autoarima.fit(series)
 
     return(autoarima)
@@ -20,7 +20,7 @@ def load_dataframe(name: str):
 
     if name == 'Rio crimes':
 
-        dataframe = pd.read_csv(r"https://raw.githubusercontent.com/guilherme-takata/Tese2021_datasets/main/DOMensalEstadoDesde1991_agregado.csv", sep = ';', low_memory = False)
+        dataframe = pd.read_csv(r"https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv", sep = ',', low_memory = False)
 
     elif name == 'Apple':
 
@@ -34,7 +34,7 @@ dataframe = load_dataframe(dataset_name)
 
 display(dataframe)
 
-data_series = dataframe['0']
+data_series = dataframe['Passengers']
 
 display(data_series)
 
