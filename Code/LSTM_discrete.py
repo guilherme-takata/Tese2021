@@ -1,3 +1,4 @@
+from numpy.core.numeric import False_
 import pandas as pd 
 import numpy as np 
 import tensorflow as tf
@@ -15,7 +16,7 @@ from tensorflow.keras import Sequential
 import plotly.graph_objects as go
 
 
-len_lags = 3
+len_lags = 15
 
 '''
 Seção para carregamento da base de dados e adequação dos nossos dados de treinamento
@@ -49,19 +50,11 @@ Construção da rede a ser usada e treinada no nosso conjunto de dados
 '''
 
 Model = Sequential() # Inicialização da nossa rede
-Model.add(LSTM(128, input_shape = (len_lags, 1), return_sequences = True, activation = "relu"))
-Model.add(LSTM(64, activation = "relu"))
-# Model.add(Dense(32, activation = 'relu'))
-# Model.add(LSTM(16, return_sequences = True))
-# Model.add(LSTM(256, return_sequences = True))
-# Model.add(LSTM(128))
-# Model.add(Dense(120, activation = 'relu'))
-# Model.add(Dense(64, activation = 'relu'))
-# Model.add(Dense(32, activation = 'relu'))
-# Model.add(Dense(64))
-Model.add(Dense(1))
-
-Model.compile(loss = 'mean_squared_error', optimizer = 'adam') # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
+Model.add(LSTM(4, input_shape = (len_lags, 1), return_sequences = True))
+# Model.add(LSTM(160, input_shape = (len_lags, 1)))
+Model.add(Dense(20, use_bias = True))
+Model.add(Dense(1, use_bias = True))
+Model.compile(loss = 'mean_squared_error', optimizer = 'nadam') # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
 
 Model.fit(X_train, Y_train, epochs = 20, batch_size = 1 , verbose = 1) # Chamada do treinamento e otimização da rede
 

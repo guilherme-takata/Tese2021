@@ -3,8 +3,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import pandas_datareader.data as web
 import numpy as np
-from statsmodels.graphics.tsaplots import plot_pacf
-from statsmodels.graphics.tsaplots import plot_acf
+from statsmodels.tsa.stattools import pacf, acf
 from IPython.display import display
 import datetime as dt
 from traitlets.traitlets import Int
@@ -29,6 +28,7 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 	dataframe = web.DataReader('AAPL', 'yahoo', start = '2010-01-01', end = '2021-09-30')
 
 	series = dataframe['Close']
+
 	suffix = ''
 	if diff:
 
@@ -38,19 +38,22 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 
 		suffix = 'ACF'
 		
-		series = series[1:]
+		series = acf(series, nlags = 30)
 
-		plot_pacf(series)
+		fig = go.Figure(go.Scatter(x = np.arrange(len(series)),  y = series, name = "ACF"))
 
-		plt.show()
+		fig.update_xaxes(rangslider_visible = True)
 
+		fig.update_layout(title = "Autocorrelação", xaxis_title = "Número do lag", yaxis_title = "Autocorrelação")
+
+		fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\AAPL_dataset_acf.png", width = 1600 , format = "png", height = 900)
 		return()
 
 	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = series, text = 'Close'))
 
 	fig.update_layout({"title": 'Preço das ações da Apple ao fechar a bolsa', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Preço de fechamento'}})
 
-	# fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\AAPL_dataset_{suffix}.png" , width = 1600, format = 'png', height = 900 )
+	# fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\AAPL_dataset.png" , width = 1600, format = 'png', height = 900 )
 
 	fig.show()
 	return()
@@ -87,7 +90,7 @@ def plot_flight_database(diff : bool, auc : bool):
 		
 	if auc:
 
-		plot_acf(series)
+		plot_acf(series, title = "Plot das autocorrelações")
 
 		suffix = 'acf'
 
@@ -130,4 +133,4 @@ def plot_Collatz(x0: Int, diff: Int, auc: Int):
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_flight_database(False, False)
+plot_flight_database(False, True)
