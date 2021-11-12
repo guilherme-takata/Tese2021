@@ -16,7 +16,7 @@ from tensorflow.keras import Sequential
 import plotly.graph_objects as go
 
 
-len_lags = 15
+len_lags = 6
 
 '''
 Seção para carregamento da base de dados e adequação dos nossos dados de treinamento
@@ -45,18 +45,20 @@ X_train, Y_train = split_sequence(series_train, len_lags)
 
 X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], 1))
 
+print(X_train)
+
 '''
 Construção da rede a ser usada e treinada no nosso conjunto de dados
 '''
 
 Model = Sequential() # Inicialização da nossa rede
-Model.add(LSTM(4, input_shape = (len_lags, 1), return_sequences = True))
+Model.add(LSTM(128, input_shape = (len_lags, 1)))
 # Model.add(LSTM(160, input_shape = (len_lags, 1)))
-Model.add(Dense(20, use_bias = True))
-Model.add(Dense(1, use_bias = True))
+# Model.add(Dense(16, use_bias = True))
+Model.add(Dense(1))
 Model.compile(loss = 'mean_squared_error', optimizer = 'nadam') # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
 
-Model.fit(X_train, Y_train, epochs = 20, batch_size = 1 , verbose = 1) # Chamada do treinamento e otimização da rede
+Model.fit(X_train, Y_train, epochs = 100, batch_size = 20 , verbose = 2) # Chamada do treinamento e otimização da rede
 
 
 X_test, Y_test = split_sequence(series_test, len_lags)
