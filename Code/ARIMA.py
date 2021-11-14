@@ -7,12 +7,12 @@ from IPython.display import display
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import plotly.express as px
-
+from sklearn.metrics import *
 
 def arima_model(series): # Funcão para achar os melhores parâmetros para o modelo de ARIMA
 
 
-    autoarima = pmd.auto_arima(series, trace = True, start_p = 1, start_q = 1, max_p = 5, max_q = 5, d = 1, seasonal = True, start_P = 1, start_Q = 1, D = 1, m = 12, stepwise = True, maxiter= 200)
+    autoarima = pmd.auto_arima(series, trace = True, start_p = 1, start_q = 1, max_p = 5, max_q = 5, d = 1, seasonal = True, start_P = 1, start_Q = 1, D = 1, m = 7, stepwise = False, maxiter= 1000)
     autoarima.fit(series)
 
     return(autoarima)
@@ -20,7 +20,7 @@ def arima_model(series): # Funcão para achar os melhores parâmetros para o mod
 
 def load_dataframe(name: str):
 
-    if name == 'Rio crimes':
+    if name == 'Airlines':
 
         dataframe = pd.read_csv(r"https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv", sep = ',', low_memory = False)
 
@@ -34,11 +34,11 @@ def load_dataframe(name: str):
 
     return(dataframe)
 
-dataset_name = 'Rio crimes'
+dataset_name = 'AAPL'
 
 dataframe = load_dataframe(dataset_name)
 
-data_series = dataframe['Passengers']
+data_series = dataframe['Close']
 
 train_data = data_series[:math.floor(len(data_series)*0.8)]
 
@@ -55,6 +55,13 @@ fig_test = go.Figure(go.Scatter(x = dataframe.index, y = model_pred, name = "Pre
 fig_test.add_trace(go.Scatter(x = dataframe.index, y = test_data, name = "Dados reais", mode = "lines+markers"))
 
 fig_test.show()
+
+fig_test.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\ARIMA_passengers.png",
+					width=1600, format='png', height=900)
+
+mse = mean_squared_error(test_data, model_pred)
+
+print(mse)
 
 # plt.plot(train_data.index, train_data, color = 'purple', label = 'Dados de treinamento')
 

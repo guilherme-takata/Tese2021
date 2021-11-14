@@ -10,14 +10,17 @@ from traitlets.traitlets import Int
 import yfinance as yf
 import plotly.graph_objects as go
 import kaleido
+from statsmodels.graphics.tsaplots import plot_acf
+import matplotlib.pyplot as plt
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 '''
 Definição das funções usadas para plotar nossas séries temporais
 '''
 
-def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidir se vamos plottar a série já diferenciada ou não
 
+# Recebe um booleano para decidir se vamos plottar a série já diferenciada ou não
+def plot_stock_prices(diff: bool, auc: bool):
 	'''
 	Plotta a série temporal dos preços do ouro (em dólares)
 
@@ -25,7 +28,8 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 
 	auc : Parâmetro que determina se será plotado a autocorrelação da série
 	'''
-	dataframe = web.DataReader('AAPL', 'yahoo', start = '2010-01-01', end = '2021-09-30')
+	dataframe = web.DataReader(
+		'AAPL', 'yahoo', start='2010-01-01', end='2021-09-30')
 
 	series = dataframe['Close']
 
@@ -36,31 +40,25 @@ def plot_stock_prices(diff : bool, auc : bool): # Recebe um booleano para decidi
 
 	if auc:
 
-		suffix = 'ACF'
-		
-		series = acf(series, nlags = 30)
+		plot_acf(series, lags=100)
 
-		fig = go.Figure(go.Scatter(x = np.arrange(len(series)),  y = series, name = "ACF"))
+		plt.show()
 
-		fig.update_xaxes(rangslider_visible = True)
-
-		fig.update_layout(title = "Autocorrelação", xaxis_title = "Número do lag", yaxis_title = "Autocorrelação")
-
-		fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\AAPL_dataset_acf.png", width = 1600 , format = "png", height = 900)
 		return()
 
-	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = series, text = 'Close'))
+	fig = go.Figure(data=go.Scatter(x=dataframe.index, y=series, text='Close'))
 
-	fig.update_layout({"title": 'Preço das ações da Apple ao fechar a bolsa', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Preço de fechamento'}})
+	fig.update_layout({"title": 'Preço das ações da Apple ao fechar a bolsa', "xaxis": {
+					  "title": "Data"}, "yaxis": {'title': 'Preço de fechamento'}})
 
-	# fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\AAPL_dataset.png" , width = 1600, format = 'png', height = 900 )
+	fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\AAPL_dataset.png",
+					width=1600, format='png', height=900)
 
 	fig.show()
 	return()
 
 
-def plot_flight_database(diff : bool, auc : bool):
-
+def plot_flight_database(diff: bool, auc: bool):
 	'''
 	Plotta a série temporal do número de cancelamentos de voos de 2009 até 2018
 
@@ -69,68 +67,54 @@ def plot_flight_database(diff : bool, auc : bool):
 	auc : Parâmetro que determina se será plotado a autocorrelação da série
 	'''
 
-	dataframe = pd.read_csv(r'https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv', sep = ',', low_memory= False)
-	
-	dataframe["Month"] = pd.to_datetime(dataframe["Month"], format = "%Y-%m")
+	dataframe = pd.read_csv(
+		r'https://raw.githubusercontent.com/jbrownlee/Datasets/master/airline-passengers.csv', sep=',', low_memory=False)
 
-	dataframe.set_index("Month", inplace = True)
+	dataframe["Month"] = pd.to_datetime(dataframe["Month"], format="%Y-%m")
+
+	dataframe.set_index("Month", inplace=True)
 
 	print(dataframe.index)
 
 	series = dataframe['Passengers']
 
-	# display(series)
-
-	# suffix = ''
-
 	if diff:
 
 		series = series.diff()
 		series = series[1:]
-		
+
 	if auc:
+		plot_acf(series, lags=30)
 
-		plot_acf(series, title = "Plot das autocorrelações")
-
-		suffix = 'acf'
+		plt.savefig(
+			r"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Passengers_acf.png",)
 
 		plt.show()
-
 		return()
 
-	fig = go.Figure(data = go.Scatter(x = dataframe.index, y = dataframe['Passengers']))
 
-	fig.update_layout({"title": 'Número de crimes por mês e ano', "xaxis" :{"title":"Data"}, "yaxis": {'title' :'Número de passageiros'}})
+# def plot_Collatz(x0: Int, diff: Int, auc: Int):
+# 	'''
+# 	Plotta a sequência de Collatz começando em x0
 
-	fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\Crimes_no_RJ.png", width = 1600, format = 'png', height = 900 )
+# 	diff : Parâmetro para determinar se plottamos a série diferenciada
 
-	fig.show()
-	
-	return()
+# 	auc : Parâmetro que determina se será plotado a autocorrelação da série
+# 	'''
 
+# 	series = pd.Series(Collatz(x0))
 
-def plot_Collatz(x0: Int, diff: Int, auc: Int):
-	'''
-	Plotta a sequência de Collatz começando em x0
+# 	if diff:
 
-	diff : Parâmetro para determinar se plottamos a série diferenciada
+# 		series = series.diff()
 
-	auc : Parâmetro que determina se será plotado a autocorrelação da série
-	'''
-	
-	series = pd.Series(Collatz(x0))
+# 		series = series[1:]
 
-	if diff:
+# 	if auc:
 
-		series = series.diff()
-		
-		series = series[1:]
-		
-	if auc:
-
-		plot_acf(series)
+# 		plot_acf(series)
 
 
 #--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
 
-plot_flight_database(False, True)
+plot_stock_prices(False, True)
