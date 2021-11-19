@@ -12,7 +12,7 @@ from sklearn.metrics import *
 def arima_model(series): # Funcão para achar os melhores parâmetros para o modelo de ARIMA
 
 
-    autoarima = pmd.auto_arima(series, trace = True, start_p = 1, start_q = 1, max_p = 5, max_q = 5, d = 1, seasonal = True, start_P = 1, start_Q = 1, D = 1, m = 7, stepwise = False, maxiter= 1000)
+    autoarima = pmd.auto_arima(series, trace = True, start_p = 1, start_q = 1, max_p = 5, max_q = 5, d = 1, seasonal = True, start_P = 1, start_Q = 1, D = 1, m = 7, stepwise = False, maxiter= 1500)
     autoarima.fit(series)
 
     return(autoarima)
@@ -30,7 +30,7 @@ def load_dataframe(name: str):
 
     else:
 
-        dataframe = web.DataReader('AAPL', 'yahoo', start = '2017-01-01', end = '2021-09-30')
+        dataframe = web.DataReader('AAPL', 'yahoo', start = '2016-01-01', end = '2021-10-31')
 
     return(dataframe)
 
@@ -40,9 +40,9 @@ dataframe = load_dataframe(dataset_name)
 
 data_series = dataframe['Close']
 
-train_data = data_series[:math.floor(len(data_series)*0.8)]
+train_data = data_series[:math.floor(len(data_series)*0.7)]
 
-test_data = data_series[math.floor(len(data_series)*0.8):]
+test_data = data_series[math.floor(len(data_series)*0.7):]
 
 model = arima_model(train_data)
 
@@ -56,18 +56,9 @@ fig_test.add_trace(go.Scatter(x = dataframe.index, y = test_data, name = "Dados 
 
 fig_test.show()
 
-fig_test.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\ARIMA_passengers.png",
+fig_test.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\ARIMA_AAPL.png",
 					width=1600, format='png', height=900)
 
 mse = mean_squared_error(test_data, model_pred)
 
 print(mse)
-
-# plt.plot(train_data.index, train_data, color = 'purple', label = 'Dados de treinamento')
-
-# plt.plot(test_data.index, model_pred, color = 'blue', label = 'Predição do modelo')
-
-# plt.plot(test_data.index, test_data, color = 'red', label = 'Dados reais')
-
-# plt.show()
-
