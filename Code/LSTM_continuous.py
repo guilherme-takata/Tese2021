@@ -13,86 +13,107 @@ from sklearn.preprocessing import MinMaxScaler
 from Auxiliary_functions import *
 from tensorflow.keras import Sequential
 import plotly.graph_objects as go
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import *
 
-#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
-'''
-Aqui carregamos nossos dados na memória e chamamos a função definida anteriormente
-'''
+__name__ = "main"
 
-dataframe_train = web.DataReader('AAPL', 'yahoo', start = '2000-01-01', end = '2021-07-31') # Carregamos nossos dados de treino na memória usando o pandas
+def load_prep_data(): 
+    '''
+    Aqui carregamos nossos dados na memória e chamamos a função definida anteriormente
+    '''
 
-display(dataframe_train)
+    dataframe_train = web.DataReader('AAPL', 'yahoo', start = '2000-01-01', end = '2021-07-31') # Carregamos nossos dados de treino na memória usando o pandas
 
-scaler = MinMaxScaler()
+    display(dataframe_train)
 
-series = dataframe_train.iloc[:,3:4].values
+    global scaler
 
-processed_series = scaler.fit_transform(series)
+    scaler = MinMaxScaler()
 
-len_lags = 40 # tamanho da nossa janela
+    series = dataframe_train.iloc[:,3:4].values
 
-X_train, Y_train = split_sequence(processed_series, len_lags)
+    processed_series = scaler.fit_transform(series)
 
-X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], 1))
+    global len_lags
 
-print(X_train.shape)
+    len_lags = 30 # tamanho da nossa janela
 
-#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
+    X_train, Y_train = split_sequence(processed_series, len_lags)
 
-'''
-Parte responsável pela construção, experimentação e treinamento das redes 
-'''
+    X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], 1))
 
-Model = Sequential() # Inicialização da nossa rede
-Model.add(LSTM(units = 85, return_sequences = True, input_shape = (len_lags,1)))
-Model.add(Dropout(0.2))
-# Model.add(LSTM(units = 70, return_sequences = True))
-# Model.add(Dropout(0.2))
-Model.add(LSTM(units = 85))
-# Model.add(Dropout(0.2))
-Model.add(Dense(10))
-Model.add(Dense(units = 1))
-
-Model.compile(loss = 'mean_squared_error', optimizer = 'adam') # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
-
-Model.fit(X_train, Y_train, epochs = 10, batch_size = 32, verbose = 1) # Chamada do treinamento e otimização da rede
+    return(X_train, Y_train)
 
 
-#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
+def create_train_model(train_X: np.array, train_Y: np.array) -> Sequential:
 
-'''
-Carregamento dos dados de validação do modelo
-'''
+    '''
+    Parte responsável pela construção, experimentação e treinamento das redes 
+    '''
 
-dataframe2 = web.DataReader('AAPL', 'yahoo', start = '2021-08-01', end = '2021-11-17') # Carregamento na memória da nossa base de teste 
+    Model = Sequential() # Inicialização da nossa rede
+    Model.add(LSTM(units = 125, return_sequences = False, input_shape = (len_lags,1)))
+    Model.add(Dense(units = 10))
+    Model.add(Dense(units = 1, activation = "linear"))
 
-data_test = dataframe2.iloc[:,3:4].values
+    Model.compile(loss = 'mean_squared_error', optimizer = 'adam') # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
 
-data_test_processed = scaler.transform(data_test)
+    Model.fit(train_X, train_Y, epochs = 20, batch_size = 30, verbose = 1) # Chamada do treinamento e otimização da rede
 
-X_test, Y_test = split_sequence(data_test_processed, len_lags)
+    return(Model)
 
-X_test = X_test.reshape((X_test.shape[0], X_test.shape[1], 1))
 
-predictions = Model.predict(X_test)
+def validation_loading():
+    
+    '''
+    Carregamento dos dados de validação do modelo
+    '''
 
-print(Model.evaluate(X_test, Y_test))
+    global dataframe2
 
-predictions = scaler.inverse_transform(predictions)
+    dataframe2 = web.DataReader('AAPL', 'yahoo', start = '2021-08-01', end = '2021-11-20') # Carregamento na memória da nossa base de teste 
 
-Y_test = scaler.inverse_transform(Y_test)
+    data_test = dataframe2.iloc[:,3:4].values
 
-#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#--------------------#
+    data_test_processed = scaler.transform(data_test)
 
-'''
-Plotagem para comparação dos dados de teste e as predições feitas
-'''
+    X_test, Y_test = split_sequence(data_test_processed, len_lags)
 
-fig = go.Figure(go.Scatter(x = dataframe2.index, y = Y_test[:,0], name = "Dados reais", mode = "lines+markers"))
+    X_test_reshaped = X_test.reshape((X_test.shape[0], X_test.shape[1], 1))
 
-fig.add_trace(go.Scatter(x = dataframe2.index, y = predictions[:,0], name = "Predições do modelo", mode = "lines+markers"))
+    return(X_test_reshaped, Y_test)
 
-fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\LSTM_AAPL.png", format = "png", width = 1600, height = 900)
 
-fig.show()
+def model_validation(X_test, Y_test, Model):
+
+    '''
+    Plotagem para comparação dos dados de teste e as predições feitas
+    '''
+
+    predictions = Model.predict(X_test)
+
+    predictions = scaler.inverse_transform(predictions)
+
+    Y_test = scaler.inverse_transform(Y_test)
+
+    fig = go.Figure(go.Scatter(x = dataframe2.index, y = Y_test[:,0], name = "Dados reais", mode = "lines+markers"))
+
+    fig.add_trace(go.Scatter(x = dataframe2.index, y = predictions[:,0], name = "Predições do modelo", mode = "lines+markers"))
+
+    fig.write_image(fr"C:\Users\GuilhermeTakata\Documents\Tese2021\Graphs and Images\LSTM_AAPL.png", format = "png", width = 1600, height = 900)
+
+    fig.show()
+
+    return(mean_squared_error(predictions, Y_test))
+
+def main():
+
+    X_train, Y_train = load_prep_data()
+    Model = create_train_model(X_train, Y_train)
+    X_test, Y_test = validation_loading()
+    validation_mse = model_validation(X_test, Y_test, Model)
+    print(validation_mse)
+
+if __name__ == "main":
+
+    main()
