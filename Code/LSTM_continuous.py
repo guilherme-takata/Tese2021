@@ -14,7 +14,7 @@ from Auxiliary_functions import *
 from tensorflow.keras import Sequential
 import plotly.graph_objects as go
 from sklearn.metrics import *
-
+import keras
 __name__ = "main"
 
 def load_prep_data(): 
@@ -38,7 +38,7 @@ def load_prep_data():
 
     len_lags = 30 # tamanho da nossa janela
 
-    X_train, Y_train = split_sequence(processed_series, len_lags)
+    X_train, Y_train = split_sequence(series, len_lags)
 
     X_train = X_train.reshape((X_train.shape[0], X_train.shape[1], 1))
 
@@ -52,18 +52,21 @@ def create_train_model(train_X: np.array, train_Y: np.array) -> Sequential:
     '''
 
     Model = Sequential() # Inicialização da nossa rede
-    Model.add(LSTM(units = 125, return_sequences = False, input_shape = (len_lags,1)))
-    Model.add(Dense(units = 10))
-    Model.add(Dense(units = 1, activation = "linear"))
+    Model.add(LSTM(units = 150, return_sequences = False, input_shape = (len_lags,1)))
+    # Model.add(LSTM(units = 60, return_sequences = False))
+    Model.add(Dense(units = 20))
+    Model.add(Dense(units = 1, activation = "linear")) 
 
-    Model.compile(loss = 'mean_squared_error', optimizer = 'adam') # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
+    opt = tf.keras.optimizers.Adam(lr = 0.002)
 
-    Model.fit(train_X, train_Y, epochs = 20, batch_size = 30, verbose = 1) # Chamada do treinamento e otimização da rede
+    Model.compile(loss = 'mean_squared_error', optimizer = opt) # Compilação do modelo indicando qual função de perda a ser usada e o otimizador de escolha
+
+    Model.fit(train_X, train_Y, epochs = 60, batch_size = 32, verbose = 1) # Chamada do treinamento e otimização da rede
 
     return(Model)
 
 
-def validation_loading():
+def validation_loading():           
     
     '''
     Carregamento dos dados de validação do modelo
@@ -77,7 +80,7 @@ def validation_loading():
 
     data_test_processed = scaler.transform(data_test)
 
-    X_test, Y_test = split_sequence(data_test_processed, len_lags)
+    X_test, Y_test = split_sequence(data_test, len_lags)
 
     X_test_reshaped = X_test.reshape((X_test.shape[0], X_test.shape[1], 1))
 
@@ -92,9 +95,9 @@ def model_validation(X_test, Y_test, Model):
 
     predictions = Model.predict(X_test)
 
-    predictions = scaler.inverse_transform(predictions)
+    # predictions = scaler.inverse_transform(predictions)
 
-    Y_test = scaler.inverse_transform(Y_test)
+    # Y_test = scaler.inverse_transform(Y_test)
 
     fig = go.Figure(go.Scatter(x = dataframe2.index, y = Y_test[:,0], name = "Dados reais", mode = "lines+markers"))
 
